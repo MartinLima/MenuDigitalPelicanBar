@@ -108,7 +108,7 @@
     </nav>
 
     <main class="max-w-2xl mx-auto px-4 pt-10 min-h-[60vh] pb-16 bg-pelican-base relative z-20" id="main-content">
-        <div class="text-center py-20 animate-pulse text-pelican-gold">Cargando la carta...</div>
+        <div class="text-center py-20 animate-pulse text-pelican-gold">Cargando carta...</div>
     </main>
 
     <footer class="bg-pelican-base border-t border-pelican-gold/20 relative mt-auto z-20">
@@ -147,7 +147,7 @@
                 </div>
             </div>
             <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="font-sans text-[10px] uppercase tracking-widest text-pelican-muted/40">© 2024 Pelican Bar.</p>
+                <p class="font-sans text-[10px] uppercase tracking-widest text-pelican-muted/40">© 2026 Pelican Bar.</p>
             </div>
         </div>
     </footer>
@@ -239,7 +239,7 @@
 
             if (isPartyMode) {
                 categories = [
-                    { id: 'tab-fiesta', label: '🎉 MENU FIESTA 🎉', keywords: ['fiesta'] }
+                    { id: 'tab-fiesta', label: '🍻 Fiesta', keywords: ['fiesta'] }
                 ];
             } else {
                 categories = [
@@ -254,7 +254,7 @@
                     { id: 'tab-sandwiches', label: 'Sándwiches', keywords: ['sandwich', 'bondiola'] },
                     { id: 'tab-papas', label: 'Papas', keywords: ['papa'] },
                     { id: 'tab-tequenos', label: 'Entradas', keywords: ['teque', 'empanada'] },
-                    { id: 'tab-postres', label: 'Postres', keywords: ['postre'] }
+                    { id: 'tab-postres', label: 'Postres', keywords: ['postre'] },
                 ];
             }
 
@@ -405,7 +405,7 @@
             if (!url) return null;
             if (url.includes('drive.google.com')) {
                 const idMatch = url.match(/\/d\/(.*?)(?:\/|$)/);
-                if (idMatch && idMatch[1]) { return `https://lh3.googleusercontent.com/d/$${idMatch[1]}`; }
+                if (idMatch && idMatch[1]) { return `https://lh3.googleusercontent.com/d/${idMatch[1]}`; }
             }
             return url;
         }
