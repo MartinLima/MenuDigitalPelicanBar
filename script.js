@@ -266,7 +266,7 @@ function procesarURLImagen(url) {
     if (!url) return null;
     if (url.includes('drive.google.com')) {
         const idMatch = url.match(/\/d\/(.*?)(?:\/|$)/);
-        if (idMatch && idMatch[1]) { return `https://lh3.googleusercontent.com/d/$${idMatch[1]}`; }
+        if (idMatch && idMatch[1]) { return `https://lh3.googleusercontent.com/d/${idMatch[1]}`; }
     }
     return url;
 }
