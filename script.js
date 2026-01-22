@@ -187,8 +187,18 @@ function createCardHtml(item, isPartyMode) {
     const destacadoBadge = isDestacado ? `<div class="badge-destacado">Recomendado</div>` : '';
     const borderClass = isDestacado ? 'border-pelican-gold/60 shadow-gold-glow' : 'border-white/5';
 
+    // Escapamos comillas para evitar errores
+    const safeTitle = (item[KEYS.producto] || '').replace(/"/g, '&quot;');
+    const safeDesc = (item[KEYS.descripcion] || '').replace(/"/g, '&quot;');
+
     return `
-    <article class="glass-card rounded-xl p-3 flex gap-4 items-center fade-in-up transition-all duration-300 group hover:border-pelican-gold/40 hover:shadow-gold-glow relative overflow-hidden ${borderClass}">
+    <article 
+        onclick="openProductModal(this)"
+        data-title="${safeTitle}"
+        data-price="${cleanPrice}"
+        data-desc="${safeDesc}"
+        data-img="${imgSrc}"
+        class="glass-card rounded-xl p-3 flex gap-4 items-center fade-in-up transition-all duration-300 group hover:border-pelican-gold/40 hover:shadow-gold-glow relative overflow-hidden ${borderClass} cursor-pointer active:scale-95">
         
         ${destacadoBadge}
 
@@ -197,8 +207,6 @@ function createCardHtml(item, isPartyMode) {
             <svg class="absolute bottom-[20px] right-[-15px] w-10 h-10 text-pelican-leaf opacity-30 rotate-[10deg]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7 7 5 14 12 22C19 14 17 7 12 2Z" /></svg>
             <svg class="absolute bottom-[5px] right-[25px] w-8 h-8 text-pelican-leaf opacity-30 rotate-[-70deg]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7 7 5 14 12 22C19 14 17 7 12 2Z" /></svg>
             <svg class="absolute bottom-[40px] right-[5px] w-6 h-6 text-pelican-leaf opacity-20 rotate-[-15deg]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7 7 5 14 12 22C19 14 17 7 12 2Z" /></svg>
-            <svg class="absolute bottom-[10px] right-[45px] w-6 h-6 text-pelican-leaf opacity-20 rotate-[-85deg]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7 7 5 14 12 22C19 14 17 7 12 2Z" /></svg>
-            <svg class="absolute bottom-[35px] right-[25px] w-5 h-5 text-pelican-leaf opacity-20 rotate-[-40deg]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7 7 5 14 12 22C19 14 17 7 12 2Z" /></svg>
         </div>
 
         <div class="w-24 h-24 rounded-lg overflow-hidden bg-black flex-shrink-0 relative border border-white/5 z-10">
@@ -270,3 +278,55 @@ function procesarURLImagen(url) {
     }
     return url;
 }
+
+/* --- LÓGICA DEL MODAL --- */
+const modal = document.getElementById('product-modal');
+const modalBackdrop = document.getElementById('modal-backdrop');
+const modalPanel = document.getElementById('modal-panel');
+
+function openProductModal(cardElement) {
+    // 1. Extraer datos del elemento clickeado
+    const title = cardElement.getAttribute('data-title');
+    const price = cardElement.getAttribute('data-price');
+    const desc = cardElement.getAttribute('data-desc');
+    const img = cardElement.getAttribute('data-img');
+    
+    // 2. Llenar el modal
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-price').textContent = '$' + price;
+    document.getElementById('modal-desc').textContent = desc || 'Una excelente elección para disfrutar el momento.'; // Texto por defecto si no hay descripción
+    document.getElementById('modal-img').src = img;
+    
+    // 3. Mostrar modal (quitar hidden)
+    modal.classList.remove('hidden');
+    
+    // 4. Animar entrada (pequeño timeout para que el navegador procese el cambio de display)
+    requestAnimationFrame(() => {
+        modalBackdrop.classList.remove('opacity-0');
+        modalPanel.classList.remove('opacity-0', 'translate-y-8', 'scale-95');
+        modalPanel.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+    });
+
+    // Bloquear scroll del body
+    document.body.style.overflow = 'hidden';
+}
+
+function closeProductModal() {
+    // 1. Animar salida
+    modalBackdrop.classList.add('opacity-0');
+    modalPanel.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+    modalPanel.classList.add('opacity-0', 'translate-y-8', 'scale-95');
+    
+    // 2. Esperar a que termine la transición para ocultar el div
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.style.overflow = ''; // Restaurar scroll
+    }, 300); 
+}
+
+// Cerrar con la tecla ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === "Escape" && !modal.classList.contains('hidden')) {
+        closeProductModal();
+    }
+});
